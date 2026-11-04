@@ -26,3 +26,7 @@ cloudflared.exe
 Thumbs.db
 .vscode/
 .idea/
+
+# Cache
+.vite/
+frontend/.vite/
