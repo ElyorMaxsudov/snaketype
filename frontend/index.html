@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>snaketype | a minimalistic, customizable typing test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-[#323437] text-[#d1d0c5] min-h-screen flex flex-col justify-between selection:bg-[#e2b714] selection:text-[#323437] font-mono">
+    
+    <!-- HEADER (Monkeytype Minimalist Original Style) -->
+    <header class="w-full max-w-6xl mx-auto px-4 lg:px-6 pt-6 pb-2 flex items-center justify-between">
+      <div class="flex items-center gap-4 sm:gap-6">
+        <a href="/" class="flex flex-col group select-none">
+          <span class="text-[10px] text-[#646669] leading-none mb-0.5 tracking-wider font-medium">snake see</span>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-5 rounded border-2 border-[#e2b714] flex items-center justify-center text-[10px] text-[#e2b714] font-bold">
+              ⌨
+            </div>
+            <span class="text-2xl font-bold tracking-tight text-[#d1d0c5] group-hover:text-[#e2b714] transition">
+              snake<span class="text-[#e2b714]">type</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Minimalist Ikonkalar -->
+        <nav class="flex items-center gap-1 sm:gap-2 text-[#646669]">
+          <button id="navBtnTest" class="p-1.5 rounded hover:text-[#d1d0c5] transition" title="Yozish testi">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+          </button>
+          
+          <button id="btnOpenLeaderboard" class="p-1.5 rounded hover:text-[#d1d0c5] transition" title="Yetakchilar (Leaderboard)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          </button>
+
+          <button id="btnOpenRooms" class="p-1.5 rounded hover:text-[#e2b714] transition" title="Dev Monkeytype Poyga Xonalari">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+          </button>
+
+          <button id="btnOpenFriends" class="relative p-1.5 rounded hover:text-[#d1d0c5] transition" title="Do'stlar tizimi">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span id="friendRequestBadge" class="hidden absolute top-0 right-0 w-2 h-2 bg-[#ca4754] rounded-full animate-ping"></span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- O'ng tomon: Bildirishnoma va User Bar -->
+      <div class="flex items-center gap-3">
+        <button id="btnNotifications" class="p-1.5 text-[#646669] hover:text-[#d1d0c5] transition relative" title="Bildirishnomalar">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+          <span id="notifBadge" class="hidden absolute top-0.5 right-0.5 w-2 h-2 bg-[#e2b714] rounded-full"></span>
+        </button>
+
+        <div class="relative">
+          <button id="btnOpenAuth" class="flex items-center gap-1.5 text-xs text-[#646669] hover:text-[#d1d0c5] transition px-2 py-1 rounded">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <span class="hidden sm:inline">kirish</span>
+          </button>
+
+          <button id="userDropdownTrigger" class="hidden flex items-center gap-2 text-xs text-[#646669] hover:text-[#d1d0c5] transition group select-none cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-[#646669] group-hover:text-[#d1d0c5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <span id="headerUsername" class="font-bold text-[#d1d0c5] uppercase tracking-wide">MR.USER</span>
+            <span id="headerUserLevel" class="bg-[#2c2e31] text-[#646669] group-hover:text-[#e2b714] font-bold text-[11px] px-1.5 py-0.5 rounded transition">1</span>
+          </button>
+
+          <!-- Dropdown menyu -->
+          <div id="userDropdownMenu" class="hidden dropdown-menu absolute right-0 mt-2 w-56 bg-[#2c2e31] border border-[#252729] rounded-xl shadow-2xl p-2 z-50">
+            <div class="px-3 py-2 border-b border-[#34373a] mb-1">
+              <div id="dropdownFullName" class="font-bold text-xs text-[#d1d0c5]">Ism Familya</div>
+              <div id="dropdownId" class="text-[10px] text-[#646669] font-mono">ID: USR-000000</div>
+              <div id="dropdownAccountNum" class="text-[10px] text-[#e2b714] font-mono mt-0.5">Hisob: ST-0000-0000</div>
+            </div>
+            <button id="menuItemProfile" class="w-full text-left px-3 py-2 text-xs text-[#d1d0c5] hover:bg-[#323437] hover:text-[#e2b714] rounded-lg transition flex items-center gap-2 cursor-pointer">
+              <span>👤</span> Profil & Statistika
+            </button>
+            <button id="menuItemFriends" class="w-full text-left px-3 py-2 text-xs text-[#d1d0c5] hover:bg-[#323437] hover:text-[#e2b714] rounded-lg transition flex items-center gap-2 cursor-pointer">
+              <span>👥</span> Do'stlarim
+            </button>
+            <button id="menuItemRooms" class="w-full text-left px-3 py-2 text-xs text-[#d1d0c5] hover:bg-[#323437] hover:text-[#e2b714] rounded-lg transition flex items-center gap-2 cursor-pointer">
+              <span>🏁</span> Dev Xonalar
+            </button>
+            <div class="border-t border-[#34373a] my-1"></div>
+            <button id="menuItemLogout" class="w-full text-left px-3 py-2 text-xs text-[#ca4754] hover:bg-[#ca4754]/10 rounded-lg transition flex items-center gap-2 cursor-pointer">
+              <span>🚪</span> Tizimdan chiqish
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ASOSIY MONKEYTYPE ISH MAYDONI -->
+    <main class="w-full max-w-5xl mx-auto px-4 flex-1 flex flex-col justify-center items-center py-4">
+      
+      <!-- CONFIG BAR (Aynan skrinshotdagi kabi 3 ta guruh: punctuation/numbers | time/words/rooms | 15/30/60/120) -->
+      <div class="bg-[#2c2e31] text-[#646669] text-xs font-medium rounded-xl px-4 py-2 flex flex-wrap items-center justify-center gap-3 sm:gap-6 shadow-md mb-8 select-none">
+        
+        <!-- 1-GURUH: Punctuation & Numbers (bosganda sariq bo'ladi va ishlaydi!) -->
+        <div class="flex items-center gap-3 pr-3 sm:pr-4 border-r border-[#3a3d40]">
+          <button id="togglePunctuation" class="hover:text-[#d1d0c5] transition flex items-center gap-1 cursor-pointer">
+            <span class="text-[11px]">@</span> punctuation
+          </button>
+          <button id="toggleNumbers" class="hover:text-[#d1d0c5] transition flex items-center gap-1 cursor-pointer">
+            <span class="text-[11px]">#</span> numbers
+          </button>
+        </div>
+
+        <!-- 2-GURUH: Time / Words / Rooms -->
+        <div class="flex items-center gap-3 pr-3 sm:pr-4 border-r border-[#3a3d40]">
+          <button id="btnModeTime" class="mode-type-btn text-[#e2b714] font-semibold flex items-center gap-1 transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            time
+          </button>
+          <button id="btnModeWords" class="mode-type-btn hover:text-[#d1d0c5] flex items-center gap-1 transition cursor-pointer">
+            <span class="font-bold">A</span> words
+          </button>
+          <button id="btnModeRooms" class="hover:text-[#e2b714] flex items-center gap-1 transition cursor-pointer" title="Dev Monkeytype Rooms">
+            <span>🏁</span> rooms
+          </button>
+        </div>
+
+        <!-- 3-GURUH: Qiymatlar (15, 30, 60, 120 yoki 10, 25, 50, 100) -->
+        <div id="modeValuesContainer" class="flex items-center gap-3">
+          <button data-val="15" class="mode-val-btn hover:text-[#d1d0c5] transition cursor-pointer">15</button>
+          <button data-val="30" class="mode-val-btn text-[#e2b714] font-bold transition cursor-pointer">30</button>
+          <button data-val="60" class="mode-val-btn hover:text-[#d1d0c5] transition cursor-pointer">60</button>
+          <button data-val="120" class="mode-val-btn hover:text-[#d1d0c5] transition cursor-pointer">120</button>
+        </div>
+      </div>
+
+      <!-- TIL INDIKATORI (Matn ustida markazda!) -->
+      <div class="mb-4 relative">
+        <button id="btnLanguageSelector" class="flex items-center gap-1.5 text-xs text-[#646669] hover:text-[#d1d0c5] transition px-3 py-1 rounded-lg hover:bg-[#2c2e31] cursor-pointer group">
+          <svg class="w-3.5 h-3.5 text-[#646669] group-hover:text-[#e2b714] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+          </svg>
+          <span id="currentLanguageLabel">uzbek (latin)</span>
+          <svg class="w-3 h-3 text-[#646669]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- TIL TANLASH DROPDOWN (Ko'p tillar ro'yxati + Qidiruv) -->
+        <div id="languageDropdown" class="hidden absolute left-1/2 -translate-x-1/2 top-8 w-72 bg-[#2c2e31] border border-[#252729] rounded-xl shadow-2xl p-2 z-50">
+          <div class="px-2 py-1 mb-2">
+            <input type="text" id="langSearchInput" placeholder="tilni qidirish..." class="w-full bg-[#323437] text-xs text-[#d1d0c5] px-3 py-1.5 rounded-lg border border-[#3a3d40] focus:outline-none focus:border-[#e2b714]" />
+          </div>
+          <div id="langListContainer" class="max-h-60 overflow-y-auto space-y-1 text-xs">
+            <!-- Asosiy tillar -->
+            <button data-lang="uzbek_latin" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#e2b714] font-bold bg-[#323437] hover:bg-[#383a3d] transition cursor-pointer">🇺🇿 uzbek (latin)</button>
+            <button data-lang="uzbek_cyrillic" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇺🇿 ўзбекча (кирилл)</button>
+            <button data-lang="english" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇬🇧 english</button>
+            <button data-lang="russian" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇷🇺 russian</button>
+            <button data-lang="turkish" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇹🇷 turkish (türkçe)</button>
+            <button data-lang="kazakh" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇰🇿 kazakh (қазақша)</button>
+            <button data-lang="german" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇩🇪 german (deutsch)</button>
+            <button data-lang="french" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇫🇷 french (français)</button>
+            <button data-lang="spanish" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇪🇸 spanish (español)</button>
+            <button data-lang="italian" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇮🇹 italian (italiano)</button>
+            <button data-lang="arabic" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🇸🇦 arabic (العربية)</button>
+            
+            <!-- Dasturlash tillari -->
+            <div class="px-3 py-1 text-[10px] text-[#646669] uppercase font-bold border-t border-[#3a3d40] mt-1">Dasturlash Tillari</div>
+            <button data-lang="javascript" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🟨 javascript</button>
+            <button data-lang="python" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🐍 python</button>
+            <button data-lang="cpp" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">⚙️ c++</button>
+            <button data-lang="html_css" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🌐 html & css</button>
+            <button data-lang="java" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">☕ java</button>
+            <button data-lang="rust" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🦀 rust</button>
+            <button data-lang="go" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🐹 golang</button>
+            <button data-lang="php" class="lang-option w-full text-left px-3 py-1.5 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#323437] transition cursor-pointer">🐘 php</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jonli Hisoblagich -->
+      <div class="w-full flex items-center justify-between px-2 mb-2 min-h-[36px]">
+        <span class="text-2xl font-mono font-bold text-[#e2b714] opacity-0 transition-opacity" id="liveTimer">30</span>
+        <div class="flex items-center gap-4 text-xs font-mono text-[#646669] opacity-0 transition-opacity" id="liveStatsBox">
+          <span>wpm: <strong id="liveWpm" class="text-[#d1d0c5]">0</strong></span>
+          <span>aniqlik: <strong id="liveAcc" class="text-[#d1d0c5]">100%</strong></span>
+        </div>
+      </div>
+
+      <!-- MATN MAYDONI -->
+      <div id="typingAreaWrapper" class="relative w-full h-[140px] overflow-hidden cursor-text select-none py-1 focus:outline-none" tabindex="0">
+        <div id="wordsContainer" class="relative flex flex-wrap content-start w-full">
+          <div id="caretCursor" class="caret-cursor"></div>
+        </div>
+      </div>
+
+      <!-- Qayta Boshlash Tugmasi -->
+      <div class="mt-6 flex flex-col items-center gap-3">
+        <button id="btnRestart" class="p-2 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#2c2e31] transition cursor-pointer" title="Qayta boshlash">
+          <svg class="w-5 h-5 transition-transform hover:rotate-180 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+
+        <div class="flex flex-col items-center gap-1 text-[11px] text-[#646669] select-none">
+          <div class="flex items-center gap-1.5">
+            <kbd class="px-1.5 py-0.5 bg-[#2c2e31] rounded text-[10px] text-[#d1d0c5]">tab</kbd>
+            <span>+</span>
+            <kbd class="px-1.5 py-0.5 bg-[#2c2e31] rounded text-[10px] text-[#d1d0c5]">enter</kbd>
+            <span>- restart test</span>
+          </div>
+          <div class="text-[10px]">
+            <kbd class="px-1.5 py-0.5 bg-[#2c2e31] rounded text-[10px] text-[#d1d0c5]">esc</kbd>
+            <span>- qayta boshlash</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full max-w-6xl mx-auto px-4 lg:px-6 py-4 text-[11px] text-[#646669] flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#" class="hover:text-[#d1d0c5] transition">✉ contact</a>
+        <a href="#" class="hover:text-[#d1d0c5] transition">support</a>
+        <a href="https://github.com" target="_blank" class="hover:text-[#d1d0c5] transition">&lt;/&gt; github</a>
+        <a href="#" id="footerRoomsBtn" class="hover:text-[#e2b714] transition">🏁 dev rooms</a>
+        <a href="#" class="hover:text-[#d1d0c5] transition">terms</a>
+        <a href="#" class="hover:text-[#d1d0c5] transition">security</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="hover:text-[#d1d0c5] cursor-pointer">🎨 serika dark</span>
+        <span>•</span>
+        <span class="text-[#e2b714]">snaketype.com</span>
+      </div>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- KATTA TO'LIQ EKRANLI DEV MONKEYTYPE ROOMS (FULL-SCREEN ROOM VIEW) -->
+    <!-- ================================================================= -->
+    <div id="roomsModal" class="hidden fixed inset-0 z-50 bg-[#323437] flex flex-col overflow-hidden">
+      
+      <!-- Dev Rooms Header -->
+      <div class="w-full border-b border-[#252729] bg-[#2c2e31] px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span class="text-xl">🏁</span>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-bold text-[#e2b714]">DEV MONKEYTYPE</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-[#323437] text-[#2ecc71] font-bold rounded">MULTIPLAYER ARENA</span>
+            </div>
+            <span class="text-[10px] text-[#646669]">Do'stlar bilan real-time poyga va jonli chat</span>
+          </div>
+        </div>
+
+        <button id="btnCloseRoomsArena" class="px-3 py-1.5 rounded-lg bg-[#323437] hover:bg-[#ca4754]/20 text-[#646669] hover:text-[#ca4754] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <span>✕</span> Chiqish
+        </button>
+      </div>
+
+      <!-- LOBBY VIEW (Xonalar ro'yxati va xona yaratish) -->
+      <div id="roomsLobbyView" class="flex-1 max-w-5xl mx-auto w-full p-6 flex flex-col overflow-hidden">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div class="flex-1 w-full flex items-center gap-3 bg-[#2c2e31] p-3 rounded-xl border border-[#252729]">
+            <input type="text" id="joinRoomCodeInput" placeholder="Xona kodi (Masalan: AB12CD)" class="flex-1 bg-transparent px-2 text-sm uppercase font-bold text-[#d1d0c5] focus:outline-none" />
+            <button id="btnJoinByCode" class="px-5 py-2 bg-[#e2b714] text-[#323437] font-bold text-xs rounded-lg hover:bg-[#d4a912] transition cursor-pointer">
+              Kod bilan kirish
+            </button>
+          </div>
+          <button id="btnCreateRoomOpen" class="w-full sm:w-auto px-6 py-3 bg-[#e2b714] text-[#323437] font-bold text-sm rounded-xl hover:bg-[#d4a912] transition shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+            <span>+</span> Yangi Xona Yaratish
+          </button>
+        </div>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+          <h3 class="text-xs uppercase tracking-wider text-[#646669] font-bold mb-3 flex items-center justify-between">
+            <span>Ochiq Poyga Xonalari</span>
+            <span class="text-[10px]">Real-time yangilanadi</span>
+          </h3>
+          <div id="publicRoomsList" class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto"></div>
+        </div>
+      </div>
+
+      <!-- YANGI XONA YARATISH FORMASI -->
+      <div id="createRoomFormView" class="hidden flex-1 flex flex-col items-center justify-center p-6">
+        <div class="w-full max-w-md bg-[#2c2e31] p-6 rounded-2xl border border-[#252729] shadow-2xl">
+          <h3 class="text-base font-bold text-[#d1d0c5] mb-4 flex items-center gap-2">
+            <span>🏁</span> Yangi Poyga Xonasi Sozlamalari
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs text-[#646669] mb-1">Xona Nomi</label>
+              <input type="text" id="newRoomName" placeholder="Masalan: Developerlar Jangi" class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none focus:border-[#e2b714]" />
+            </div>
+            <div>
+              <label class="block text-xs text-[#646669] mb-1">Til</label>
+              <select id="newRoomLang" class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none">
+                <option value="uzbek_latin">🇺🇿 O'zbekcha (Lotin)</option>
+                <option value="uzbek_cyrillic">🇺🇿 Ўзбекча (Кирилл)</option>
+                <option value="english">🇬🇧 English</option>
+                <option value="russian">🇷🇺 Русский</option>
+                <option value="turkish">🇹🇷 Türkçe</option>
+                <option value="kazakh">🇰🇿 Қазақша</option>
+                <option value="javascript">🟨 JavaScript</option>
+                <option value="python">🐍 Python</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-[#646669] mb-1">Rejim</label>
+              <select id="newRoomMode" class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none">
+                <option value="time 30">30 soniya</option>
+                <option value="time 60">60 soniya</option>
+                <option value="words 25">25 ta so'z</option>
+                <option value="words 50">50 ta so'z</option>
+              </select>
+            </div>
+            <div class="flex gap-2 pt-2">
+              <button id="btnCancelCreateRoom" class="flex-1 py-2 bg-[#323437] text-[#646669] hover:text-[#d1d0c5] font-bold text-xs rounded-xl transition cursor-pointer">
+                Bekor qilish
+              </button>
+              <button id="btnSubmitCreateRoom" class="flex-1 py-2 bg-[#e2b714] text-[#323437] font-bold text-xs rounded-xl hover:bg-[#d4a912] transition cursor-pointer">
+                Xona Yaratish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KATTA XONA ICHI (FULL-SCREEN LIVE RACE & CHAT) -->
+      <div id="activeRoomView" class="hidden flex-1 flex flex-col p-4 lg:p-6 overflow-hidden">
+        
+        <!-- Xona Ma'lumot Bar -->
+        <div class="bg-[#2c2e31] p-3 rounded-xl border border-[#252729] mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-4">
+            <div>
+              <h2 id="activeRoomName" class="text-sm font-bold text-[#d1d0c5]">Xona Nomi</h2>
+              <div class="flex items-center gap-2 text-xs text-[#646669]">
+                <span>Xona Kodi: <strong id="activeRoomCode" class="text-[#e2b714] select-all cursor-pointer">SNAKE1</strong></span>
+                <span>•</span>
+                <span id="activeRoomLangBadge">O'zbekcha</span>
+              </div>
+            </div>
+            <button id="btnCopyRoomLink" class="px-2.5 py-1 bg-[#323437] hover:bg-[#3a3d40] text-[10px] text-[#e2b714] font-bold rounded-lg transition cursor-pointer">
+              📋 Havolani nusxalash
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="btnStartRace" class="px-5 py-2 bg-[#2ecc71] hover:bg-[#27ae60] text-[#323437] font-bold text-xs rounded-xl transition shadow-lg cursor-pointer">
+              Poygani Boshlash (Host)
+            </button>
+            <button id="btnLeaveRoom" class="px-4 py-2 bg-[#ca4754]/20 hover:bg-[#ca4754]/30 text-[#ca4754] font-bold text-xs rounded-xl transition cursor-pointer">
+              Chiqish
+            </button>
+          </div>
+        </div>
+
+        <!-- Asosiy Arena: Chapda Katta Poyga Yo'lagi va Katta Test, O'ngda Katta Chat -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 overflow-hidden">
+          
+          <!-- Chap tomon: Katta Arena (3 ustun) -->
+          <div class="lg:col-span-3 flex flex-col overflow-hidden gap-4">
+            
+            <!-- Jonli Katta Poyga Yo'lagi -->
+            <div class="bg-[#2c2e31] p-4 rounded-2xl border border-[#252729] overflow-y-auto max-h-56">
+              <div class="text-xs font-bold text-[#646669] uppercase mb-3 flex items-center justify-between">
+                <span>Jonli Poyga Yo'lagi (Snake Race Tracks)</span>
+                <span class="text-[10px]">Real-time WPM va masofa</span>
+              </div>
+              <div id="raceTracksContainer" class="space-y-3"></div>
+            </div>
+
+            <!-- Katta Yozish Maydoni -->
+            <div id="multiplayerTypingWrapper" class="flex-1 bg-[#2c2e31] p-6 rounded-2xl border border-[#252729] relative flex flex-col justify-center select-none overflow-hidden">
+              <div id="multiCountdownOverlay" class="hidden absolute inset-0 bg-[#2c2e31]/95 z-20 flex flex-col items-center justify-center">
+                <span class="text-xs text-[#646669] font-bold uppercase mb-2">Tayyorlaning</span>
+                <span id="multiCountdownNum" class="text-7xl font-extrabold text-[#e2b714] animate-pulse">3</span>
+              </div>
+              <div class="relative h-[110px] overflow-hidden w-full">
+                <div id="multiWordsContainer" class="relative flex flex-wrap content-start w-full">
+                  <div id="multiCaret" class="caret-cursor"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- O'ng tomon: Katta Chat Paneli (1 ustun) -->
+          <div class="bg-[#2c2e31] p-4 rounded-2xl border border-[#252729] flex flex-col overflow-hidden">
+            <div class="text-xs font-bold text-[#e2b714] pb-2 border-b border-[#34373a] flex items-center justify-between">
+              <span>💬 Xona Chati</span>
+              <span class="text-[10px] text-[#646669]">Jonli suhbat</span>
+            </div>
+            <div id="roomChatMessages" class="flex-1 overflow-y-auto py-2 space-y-2 text-xs"></div>
+            <form id="roomChatForm" class="flex gap-2 pt-2 border-t border-[#34373a]">
+              <input type="text" id="roomChatInput" placeholder="Xabarni yozing..." class="flex-1 bg-[#323437] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none focus:border-[#e2b714]" />
+              <button type="submit" class="px-3 py-2 bg-[#e2b714] text-[#323437] font-bold text-xs rounded-xl hover:bg-[#d4a912] transition cursor-pointer">
+                Yuborish
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- BOSHQA MODALLAR (AUTH, PROFILE, FRIENDS, LEADERBOARD, RESULT) -->
+    <!-- ======================================================== -->
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div class="bg-[#2c2e31] border border-[#252729] rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+        <button class="modal-close absolute top-4 right-4 text-[#646669] hover:text-[#d1d0c5] text-xl font-bold cursor-pointer">&times;</button>
+        <div class="flex border-b border-[#3a3d40] mb-6">
+          <button id="authTabLogin" class="flex-1 py-2 text-center font-bold text-sm text-[#e2b714] border-b-2 border-[#e2b714] transition cursor-pointer">Kirish</button>
+          <button id="authTabRegister" class="flex-1 py-2 text-center font-bold text-sm text-[#646669] border-b-2 border-transparent hover:text-[#d1d0c5] transition cursor-pointer">Ro'yxatdan o'tish</button>
+        </div>
+        <div class="mb-4">
+          <button id="btnGoogleAuth" class="w-full flex items-center justify-center gap-3 py-2 px-4 bg-white text-gray-800 font-medium rounded-xl hover:bg-gray-100 transition shadow text-xs cursor-pointer">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <span>Google orqali kirish</span>
+          </button>
+        </div>
+        <form id="loginForm" class="space-y-3">
+          <div><label class="block text-[11px] text-[#646669] mb-1">Username yoki Hisob raqami</label><input type="text" id="loginUsername" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          <div><label class="block text-[11px] text-[#646669] mb-1">Parol</label><input type="password" id="loginPassword" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-2 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          <button type="submit" class="w-full py-2 bg-[#e2b714] text-[#323437] font-bold rounded-xl hover:bg-[#d4a912] transition text-xs cursor-pointer">Tizimga kirish</button>
+        </form>
+        <form id="registerForm" class="space-y-2.5 hidden">
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-[10px] text-[#646669] mb-1">Ism *</label><input type="text" id="regIsm" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+            <div><label class="block text-[10px] text-[#646669] mb-1">Familya *</label><input type="text" id="regFamilya" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          </div>
+          <div><label class="block text-[10px] text-[#646669] mb-1">Username *</label><input type="text" id="regUsername" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          <div><label class="block text-[10px] text-[#646669] mb-1">Parol *</label><input type="password" id="regPassword" required class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          <div><label class="block text-[10px] text-[#646669] mb-1">Hisob raqami (ixtiyoriy)</label><input type="text" id="regHisobRaqami" class="w-full bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" /></div>
+          <button type="submit" class="w-full py-2 bg-[#e2b714] text-[#323437] font-bold rounded-xl hover:bg-[#d4a912] transition text-xs mt-1 cursor-pointer">Akkaunt yaratish</button>
+        </form>
+        <div id="authErrorMsg" class="mt-2 text-xs text-[#ca4754] text-center hidden"></div>
+      </div>
+    </div>
+
+    <!-- PROFIL MODAL -->
+    <div id="profileModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div class="bg-[#2c2e31] border border-[#252729] rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <button class="modal-close absolute top-4 right-4 text-[#646669] hover:text-[#d1d0c5] text-xl font-bold cursor-pointer">&times;</button>
+        <div class="flex items-center gap-4 mb-5 pb-5 border-b border-[#3a3d40]">
+          <img id="profAvatar" src="" class="w-14 h-14 rounded-2xl bg-[#323437] border border-[#e2b714]" alt="Avatar" />
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><h2 id="profFullName" class="text-base font-bold text-[#d1d0c5]">Ism Familya</h2><span id="profLevelBadge" class="text-[10px] px-2 py-0.5 bg-[#e2b714]/20 text-[#e2b714] font-bold rounded border border-[#e2b714]/40">Level 1</span></div>
+            <div class="text-xs text-[#646669] mt-0.5">@<span id="profUsername">username</span></div>
+            <div class="flex items-center gap-4 text-[11px] text-[#646669] mt-1"><div>ID: <span id="profId" class="text-[#d1d0c5]">USR-000000</span></div><div>Hisob: <span id="profAccountNum" class="text-[#e2b714]">ST-0000-0000</span></div></div>
+          </div>
+        </div>
+        <div class="bg-[#323437] p-3 rounded-xl border border-[#3a3d40] mb-5">
+          <div class="flex justify-between items-center text-xs mb-1.5"><span class="text-[#646669]">Level Taraqqiyoti</span><span class="text-[#e2b714] font-bold"><span id="profCurrentXp">0</span> XP</span></div>
+          <div class="w-full bg-[#2c2e31] rounded-full h-2 overflow-hidden"><div id="profXpBar" class="bg-[#e2b714] h-full rounded-full transition-all duration-500" style="width: 15%"></div></div>
+          <div class="text-[10px] text-[#646669] mt-1.5 flex justify-between"><span id="profNextLevelRemaining">Keyingi levelgacha: 100 XP</span></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5 font-mono text-center">
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><div class="text-[10px] text-[#646669]">best wpm</div><div id="profBestWpm" class="text-lg font-bold text-[#e2b714] mt-0.5">0</div></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><div class="text-[10px] text-[#646669]">avg wpm</div><div id="profAvgWpm" class="text-lg font-bold text-[#d1d0c5] mt-0.5">0</div></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><div class="text-[10px] text-[#646669]">acc</div><div id="profAvgAcc" class="text-lg font-bold text-[#d1d0c5] mt-0.5">0%</div></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><div class="text-[10px] text-[#646669]">tests</div><div id="profTotalTests" class="text-lg font-bold text-[#d1d0c5] mt-0.5">0</div></div>
+        </div>
+        <button id="btnLogout" class="w-full py-2 bg-[#ca4754]/20 hover:bg-[#ca4754]/30 text-[#ca4754] font-bold text-xs rounded-xl transition border border-[#ca4754]/40 cursor-pointer">Hisobdan chiqish</button>
+      </div>
+    </div>
+
+    <!-- DO'STLAR MODAL -->
+    <div id="friendsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div class="bg-[#2c2e31] border border-[#252729] rounded-2xl w-full max-w-lg p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
+        <button class="modal-close absolute top-4 right-4 text-[#646669] hover:text-[#d1d0c5] text-xl font-bold cursor-pointer">&times;</button>
+        <h2 class="text-base font-bold text-[#d1d0c5] flex items-center gap-2 mb-3"><span>👥</span> Do'stlar Tizimi</h2>
+        <div class="flex gap-2 mb-3">
+          <input type="text" id="friendSearchInput" placeholder="username yoki hisob raqami (ST-...)" class="flex-1 bg-[#323437] border border-[#3a3d40] rounded-xl px-3 py-1.5 text-xs text-[#d1d0c5] focus:outline-none" />
+          <button id="btnSearchFriends" class="px-3 py-1.5 bg-[#e2b714] text-[#323437] font-bold text-xs rounded-xl hover:bg-[#d4a912] transition cursor-pointer">Qidirish</button>
+        </div>
+        <div id="searchResultsContainer" class="mb-3 space-y-1.5 max-h-36 overflow-y-auto hidden"></div>
+        <div id="friendRequestsSection" class="hidden mb-3 p-2.5 bg-[#323437] rounded-xl border border-[#e2b714]/30">
+          <div class="text-xs font-bold text-[#e2b714] mb-1.5 flex items-center justify-between"><span>Kelgan So'rovlar</span><span id="requestsCount" class="px-1.5 py-0.2 bg-[#e2b714] text-[#323437] rounded text-[10px]">0</span></div>
+          <div id="friendRequestsList" class="space-y-1.5"></div>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+          <h3 class="text-[10px] uppercase tracking-wider text-[#646669] font-bold mb-2">Mening Do'stlarim</h3>
+          <div id="friendsListContainer" class="space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD MODAL -->
+    <div id="leaderboardModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div class="bg-[#2c2e31] border border-[#252729] rounded-2xl w-full max-w-lg p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
+        <button class="modal-close absolute top-4 right-4 text-[#646669] hover:text-[#d1d0c5] text-xl font-bold cursor-pointer">&times;</button>
+        <h2 class="text-base font-bold text-[#e2b714] flex items-center gap-2 mb-3"><span>👑</span> Snaketype Yetakchilar Jadvali</h2>
+        <div class="flex border-b border-[#3a3d40] mb-3">
+          <button id="lbTabWpm" class="flex-1 py-1.5 text-center font-bold text-xs text-[#e2b714] border-b-2 border-[#e2b714] cursor-pointer">Top WPM</button>
+          <button id="lbTabLevel" class="flex-1 py-1.5 text-center font-bold text-xs text-[#646669] border-b-2 border-transparent hover:text-[#d1d0c5] cursor-pointer">Top Level & XP</button>
+        </div>
+        <div id="leaderboardList" class="flex-1 overflow-y-auto space-y-1.5"></div>
+      </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div class="bg-[#2c2e31] border border-[#252729] rounded-3xl w-full max-w-xl p-8 shadow-2xl relative text-center">
+        <button class="modal-close absolute top-4 right-4 text-[#646669] hover:text-[#d1d0c5] text-xl font-bold cursor-pointer">&times;</button>
+        <div id="resLevelUpBadge" class="hidden mb-3 inline-flex items-center gap-1.5 px-3 py-1 bg-[#e2b714]/20 border border-[#e2b714] rounded-full text-[#e2b714] font-bold text-xs"><span>🎉</span> Level Up! <span id="resNewLevelNum">Level 2</span></div>
+        <div class="text-[10px] font-mono uppercase tracking-widest text-[#646669] mb-1">test yakunlandi</div>
+        <div class="flex items-center justify-center gap-10 my-5">
+          <div class="flex flex-col items-center"><span class="text-xs text-[#646669]">wpm</span><span id="resWpm" class="text-5xl font-mono font-extrabold text-[#e2b714]">0</span></div>
+          <div class="flex flex-col items-center"><span class="text-xs text-[#646669]">aniqlik</span><span id="resAcc" class="text-5xl font-mono font-extrabold text-[#d1d0c5]">100%</span></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs my-5">
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><span class="text-[#646669] text-[10px] block">xom wpm</span><span id="resRawWpm" class="text-base font-bold text-[#d1d0c5]">0</span></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><span class="text-[#646669] text-[10px] block">belgilar</span><span id="resChars" class="text-xs font-bold text-[#d1d0c5]">0/0/0/0</span></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><span class="text-[#646669] text-[10px] block">vaqt</span><span id="resTime" class="text-base font-bold text-[#d1d0c5]">30s</span></div>
+          <div class="bg-[#323437] p-2.5 rounded-xl border border-[#3a3d40]"><span class="text-[#646669] text-[10px] block">olingan xp</span><span id="resXpEarned" class="text-base font-bold text-[#e2b714]">+45 XP</span></div>
+        </div>
+        <div class="flex items-center justify-center gap-3 mt-4">
+          <button id="btnResultRestart" class="px-5 py-2.5 bg-[#e2b714] text-[#323437] font-bold rounded-xl hover:bg-[#d4a912] transition flex items-center gap-2 text-xs cursor-pointer"><span>↺</span> qayta sinash</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Bildirishnomalar -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

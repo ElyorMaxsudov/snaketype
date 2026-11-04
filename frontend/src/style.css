@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #323437;
+    color: #d1d0c5;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+    overflow-x: hidden;
+  }
+}
+
+/* Monkeytype Silliq Kursor (Smooth Caret) */
+.caret-cursor {
+  position: absolute;
+  width: 2.5px;
+  background-color: #e2b714;
+  border-radius: 2px;
+  transition: left 0.08s cubic-bezier(0.15, 0.85, 0.35, 1.2), top 0.12s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Kursor faqat to'xtaganda miltillaydi */
+.caret-cursor.blinking {
+  animation: monkeyBlink 1s infinite;
+}
+
+@keyframes monkeyBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Monkeytype 3-qatorli silliq konteyner */
+#wordsContainer,
+#multiWordsContainer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* Monkeytype 1:1 original so'zlar formati */
+.word {
+  display: inline-flex;
+  margin: 0.25rem 0.55rem;
+  font-size: 1.55rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.letter {
+  display: inline-block;
+  color: #646669;
+  transition: color 0.04s ease;
+}
+
+/* To'g'ri terilgan harf (Monkeytype original: ochiq oqish-kulrang) */
+.letter.correct {
+  color: #d1d0c5;
+}
+
+/* Xato terilgan harf (Monkeytype original: qizil va tagida to'lqin) */
+.letter.incorrect {
+  color: #ca4754;
+  text-decoration: underline wavy #ca4754 1.5px;
+}
+
+/* Qo'shimcha (extra) harflar */
+.letter.extra {
+  color: #7e2a33;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #323437;
+}
+::-webkit-scrollbar-thumb {
+  background: #2c2e31;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e2b714;
+}
+
+/* Modal orqa foni */
+.modal-backdrop {
+  background: rgba(20, 21, 23, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+/* Dropdown menyu */
+.dropdown-menu {
+  transform-origin: top right;
+  transition: all 0.15s ease-out;
+}
+
+.dropdown-menu.hidden {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
